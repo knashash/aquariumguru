@@ -99,6 +99,15 @@ $(document).ready(function(){
 							}
 							if (data.main_profile[0].swim_region_middle == 1) $('#swim_region_m').prop('checked', true);
 
+							
+							// populate comments section
+							$('#general_description').val(data.main_profile[0].general_description);
+							$('#care_comments').val(data.main_profile[0].care_comments);
+							$('#breeding_comments').val(data.main_profile[0].breeding_comments);
+							$('#behavior_comments').val(data.main_profile[0].behavior_comments);
+							$('#sexing').val(data.main_profile[0].sexing);
+							
+							
 							var image_count = 0;
 							var image_comment = '';
 							$.each(data.profile_images, function(index,value) {

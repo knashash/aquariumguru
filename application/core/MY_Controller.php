@@ -13,6 +13,7 @@
      **/
     public function __construct() {
       parent::__construct();
+	  $this->output->enable_profiler(FALSE);
       $this->load->helper(array('form', 'url'));
     }
 

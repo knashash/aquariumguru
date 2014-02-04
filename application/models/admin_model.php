@@ -20,12 +20,37 @@ class Admin_model extends CI_Model {
 	 *
      * @return error|result set
      **/
-	public function get_profile($name) {
-	$query = $this->db->get_where('Categories', array('id' => $name));
-	if($query->num_rows()) {
-        return $query->result();
-      }   else {
-        return FALSE;
-      }
+	public function get_profile($name) 
+	{
+		$query = $this->db->get_where('Categories', array('id' => $name));
+		if($query->num_rows()) 
+		{
+			return $query->result();
+		}   
+		else 
+		{
+			return FALSE;
+		}
+	}
+
+	/**
+     * Get all profile images
+     *
+	 *
+     * @return error|result set
+     **/
+	public function get_all_profile_images() 
+	{
+		$this->db->where('deleted', 0);
+		$this->db->select('image_name');
+		$query = $this->db->get('profile_images');
+		if($query->num_rows()) 
+		{
+			return $query->result();
+		}   
+		else 
+		{
+			return FALSE;
+		}
 	}
 }

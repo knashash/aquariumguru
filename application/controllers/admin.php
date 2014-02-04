@@ -335,10 +335,86 @@ class Admin extends MY_Controller {
 			// add the extension to the renamed file for later retrieval
 			$file_name = $file_name.$data['upload_data']['file_ext'];
 
+			// create thumnails
+			$this->create_thumbnails($data['upload_data']['raw_name'], $data['upload_data']['file_ext']);
+
 			// on upload success, insert image into db
 			$this->fish_profiles_model->add_profile_image($profile_id, $data['upload_data']['file_name'], $image_comments);
 
 			$this->load->view('upload_success', $data);
+		}
+	}
+
+	/**
+     * Creates thumbnails (small and medium) of a given file
+	 *
+	 * @param string | $filename_raw | the filename without the extenstion
+	 * @param string | $file_ext | the filename ext
+     *
+     * @return void
+     **/
+	private function create_thumbnails($filename_raw, $file_ext)
+	{
+		// set small, medium and original filenames
+		$filename_small = $filename_raw."_small".$file_ext;
+		$filename_medium = $filename_raw."_medium".$file_ext;
+		$filename = $filename_raw.$file_ext;
+		
+		$this->load->library('image_lib'); 
+		
+		$config['image_library'] = 'gd2';
+		$config['source_image']	= FCPATH.'uploads/'.$filename;
+		$config['new_image'] = $filename_small;
+		$config['maintain_ratio'] = TRUE;
+		$config['master_dim'] = 'width';
+		$config['width'] = 100;
+		$config['height'] = 100;
+
+		$this->image_lib->initialize($config);
+
+		$this->image_lib->resize();
+
+		if ( ! $this->image_lib->resize())
+		{
+			echo $this->image_lib->display_errors();
+		}
+
+		$this->image_lib->clear();
+
+		$config['new_image'] = $filename_medium;
+		$config['width'] = 200;
+		$config['height'] = 200;
+
+		$this->image_lib->initialize($config);
+		
+		$this->image_lib->resize();
+
+		if ( ! $this->image_lib->resize())
+		{
+			echo $this->image_lib->display_errors();
+		}
+	}
+
+	/**
+     * Creates thumbnails (small and medium) of a given file
+	 *
+	 * @param string | $filename_raw | the filename without the extenstion
+	 * @param string | $file_ext | the filename ext
+     *
+     * @return void
+     **/
+	public function regenerate_thumbnails()
+	{
+		// on upload success, insert image into db
+		$image_list = $this->admin_model->get_all_profile_images();
+
+		foreach ($image_list as $key => $value)
+		{
+			$filename_array = explode(".",$image_list[$key]->image_name);
+			$filename_raw = $filename_array[0];
+			$file_ext = ".".$filename_array[1];
+
+			$this->create_thumbnails($filename_raw, $file_ext);
 		}
 	}
 }

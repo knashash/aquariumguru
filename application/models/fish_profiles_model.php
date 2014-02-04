@@ -12,7 +12,6 @@ class Fish_profiles_model extends CI_Model {
         parent::__construct();
     }
 
-
 	/**
      * Get profile
      *
@@ -20,25 +19,59 @@ class Fish_profiles_model extends CI_Model {
 	 *
      * @return error|result set
      **/
-	public function get_profile($profile_id) {
-	$this->db->select('*');
-	$this->db->from('profiles_fish');
-	$this->db->where('profiles_fish.id', $profile_id);
-	$this->db->where('deleted', 0);
-	$query = $this->db->get();
+	public function get_profile($profile_id) 
+	{
+		$this->db->select('*');
+		$this->db->from('profiles_fish');
+		$this->db->where('profiles_fish.id', $profile_id);
+		$this->db->where('deleted', 0);
+		$query = $this->db->get();
 
-	if($query->num_rows()) {
-        
-		$main_profile['main_profile'] = $query->result();
-		$main_profile['countries'] = $this->get_countries($profile_id);
-		$main_profile['common_names'] = $this->get_common_names($profile_id);
-		$main_profile['regions'] = $this->get_regions($profile_id);
-		$main_profile['profile_images'] = $this->get_profile_images($profile_id);
+		if($query->num_rows()) 
+		{
+			
+			$main_profile['main_profile'] = $query->result();
+			$main_profile['countries'] = $this->get_countries($profile_id);
+			$main_profile['common_names'] = $this->get_common_names($profile_id);
+			$main_profile['regions'] = $this->get_regions($profile_id);
+			$main_profile['profile_images'] = $this->get_profile_images($profile_id);
+			
+			return $main_profile;
+		}   
+		else 
+		{
+			return $this->db->_error_message();
+		}
+	}
+
+	/**
+     * Get a profile by the scientifc name
+     *
+	 * @param string | name | The scientific name
+	 *
+     * @return error|result set
+     **/
+	public function get_profile_by_scientifc_name($name) 
+	{		
+		$name = str_replace("_", " ", $name);
 		
-		return $main_profile;
-      }   else {
-        return $this->db->_error_message();
-      }
+		$this->db->select('id', FALSE);
+		$this->db->from('profiles_fish');
+		$this->db->where('scientific_name', $name);
+		$this->db->where('deleted', 0);
+		$query = $this->db->get();
+
+		if($query->num_rows()) 
+		{
+			$row = $query->row(); 
+			$profile_data = $this->get_profile($row->id);
+
+			return $profile_data;
+		}   
+		else 
+		{
+			return $this->db->_error_message();
+		}
 	}
 
 
