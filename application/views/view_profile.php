@@ -37,6 +37,8 @@
 
 	<!-- Images and Specs Summary Column -->
 	<div class="five columns">
+		
+		<div class="profile_thumbs">
 		<?php
 			foreach ($profile_images as $image_details)
 			{
@@ -45,81 +47,82 @@
 				echo "</div>";
 			}
 		?>
+		</div>
 
-		<div class="five columns profile_details">
-			<table>
+		<div class="profile_details">
+			<table class="profile_summary">
 				<tr>
-					<th>Profile Data Summary</th>
+					<th colspan=2>Profile Data Summary</th>
 				</tr>
 				<tr>
-					<td>Category</td><td>African Cichlids</td>
+					<td>Category:</td><td class="summary_value"><?php echo $main_profile[0]->category?></td>
 				</tr>
 				<tr>
-					<td>Family</td><td>Cichlidae</td>
+					<td>Family:</td><td class="summary_value"><?php echo $main_profile[0]->family_name?></td>
 				</tr>
 				<tr>
-					<td>Eco-System</td><td>Stream</td>
+					<td>Eco-System:</td><td class="summary_value"><?php echo $main_profile[0]->system?></td>
 				</tr>
 				<tr>
-					<td>Region</td><td>Sub-Saharan Africa</td>
+					<td>Region:</td><td class="summary_value"><?php echo $region_string?></td>
 				</tr>
 				<tr>
-					<td>Countries</td><td>Congo</td>
+					<td>Countries:</td><td class="summary_value"><?php echo $country_string?></td>
 				</tr>
 				<tr>
-					<td>Diet</td><td>Omnivore</td>
+					<td>Diet:</td><td class="summary_value"><?php echo $main_profile[0]->diet?></td>
 				</tr>
 				<tr>
-					<td>Activity</td><td>Diurnal</td>
+					<td>Activity:</td><td class="summary_value"><?php echo $main_profile[0]->activity?></td>
 				</tr>
 				<tr>
-					<td>Colors</td><td>Gray, Brown</td>
+					<td>Colors:</td><td class="summary_value"><?php echo $main_profile[0]->colors?></td>
 				</tr>
 				<tr>
-					<td>Markings</td><td>Striped</td>
+					<td>Markings:</td><td class="summary_value"><?php echo $main_profile[0]->markings?></td>
 				</tr>
 				<tr>
-					<td>Algae Eater</td><td>No</td>
+					<td>Algae Eater:</td><td class="summary_value"><?php echo $algae_eater?></td>
 				</tr>
 				<tr>
-					<td>Schools</td><td>No</td>
+					<td>Schools:</td><td class="summary_value"><?php echo $schooler?></td>
 				</tr>
 				<tr>
-					<td>Swim Region</td><td>Bottom</td>
+					<td>Swim Region:</td><td class="summary_value"><?php echo $swim_region_string?></td>
 				</tr>
 				<tr>
-					<td>Lifespan</td><td>Unknown</td>
+					<td>Lifespan(yrs):</td><td class="summary_value"><?php echo $main_profile[0]->lifespan?></td>
 				</tr>
 				<tr>
-					<td>Min Tank Size</td><td>20 Gallons</td>
+					<td>Min Tank Size(gal):</td><td class="summary_value"><?php echo $main_profile[0]->min_tank_size?></td>
 				</tr>
 				<tr>
-					<td>PH Level</td><td>6-8</td>
+					<td>PH Level:</td><td class="summary_value"><?php echo $main_profile[0]->ph_low?> - <?php echo $main_profile[0]->ph_high?></td>
 				</tr>
 				<tr>
-					<td>DH Level</td><td>2-20</td>
+					<td>DH Level:</td><td class="summary_value"><?php echo $main_profile[0]->dh_low?> - <?php echo $main_profile[0]->dh_high?></td>
 				</tr>
 				<tr>
-					<td>Temperature</td><td>75-88</td>
+					<td>Temperature:</td><td class="summary_value"><?php echo $main_profile[0]->temp_low?> - <?php echo $main_profile[0]->temp_high?></td>
 				</tr>
 				<tr>
-					<td>Size (Max)</td><td>12cm</td>
+					<td>Size (Max):</td><td class="summary_value"><?php echo $main_profile[0]->max_size?></td>
 				</tr>
 				<tr>
-					<td>Size (Female)</td><td>8cm</td>
+					<td>Size (Female):</td><td class="summary_value"><?php echo $main_profile[0]->max_size_female?></td>
 				</tr>
 				<tr>
-					<td>Size (Male)</td><td>12cm</td>
+					<td>Size (Male):</td><td class="summary_value"><?php echo $main_profile[0]->max_size_male?></td>
 				</tr>
 			</table>
 		</div>
 
 	</div>
 	
-	<!-- Images and Specs Summary Column -->
+	<!-- Ads and supplmentary content (article links, other site links, blurbs etc...) -->
 	<div class="four columns">
-		<p class="description_header">General Description</p>
-		<?php echo $main_profile[0]->general_description?>
+		<!--<p class="description_header">General Description</p>
+		<?php echo $main_profile[0]->general_description?>-->
 	</div>
 
 </div>

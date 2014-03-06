@@ -126,13 +126,37 @@ form.custom textarea {
 	margin: 0 0 10px 0;
 }
 
-.columns.profile_details {
-	width: 200px;
-	margin-left: 5px;
-	margin-right: 5px;
+.profile_details {
 	background-color:#eee;
 	clear: both;
 	-moz-border-radius: 15px;
 	border-radius: 15px;
+}
+
+.profile_summary {
+	margin: 0 auto;
+	font-size: 11px;
+	align: center;
+}
+
+.profile_summary th{
+	font-weight:bold;
+}
+
+.profile_summary td{
+	padding-right: 10px;
+	border-bottom: 1px solid #2C84AF;
+	font-weight:bold
+}
+
+.profile_summary .summary_value {
+	color:#8A0808;
+}
+
+.profile_thumbs {
+	width:220px;
+	overflow:hidden;
+	margin-left: auto ;
+	margin-right: auto ;
 }
 

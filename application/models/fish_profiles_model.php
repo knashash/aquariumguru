@@ -23,19 +23,94 @@ class Fish_profiles_model extends CI_Model {
 	{
 		$this->db->select('*');
 		$this->db->from('profiles_fish');
+		$this->db->join('categories', 'profiles_fish.category_id = categories.id', 'inner');
+		$this->db->join('family_names', 'profiles_fish.family_id = family_names.id', 'inner');
+		$this->db->join('eco_systems', 'profiles_fish.eco_system_id = eco_systems.id', 'inner');
 		$this->db->where('profiles_fish.id', $profile_id);
 		$this->db->where('deleted', 0);
 		$query = $this->db->get();
 
 		if($query->num_rows()) 
 		{
-			
 			$main_profile['main_profile'] = $query->result();
 			$main_profile['countries'] = $this->get_countries($profile_id);
 			$main_profile['common_names'] = $this->get_common_names($profile_id);
 			$main_profile['regions'] = $this->get_regions($profile_id);
 			$main_profile['profile_images'] = $this->get_profile_images($profile_id);
+
+			// set the region string for easy display in view
+			$region_string = "";
+			foreach ($main_profile['regions'] as $key => $region_array)
+			{
+				if (empty($region_string)) $region_string = $region_array->region;
+				else $region_string .= ", ".$region_array->region;
+			}
+			$main_profile['region_string'] = $region_string;
+
+			// set the country string for easy display in view
+			$country_string = "";
+			foreach ($main_profile['countries'] as $key => $country_array)
+			{
+				if (empty($country_string)) $country_string = $country_array->country;
+				else $country_string .= ", ".$country_array->country;
+			}
+			$main_profile['country_string'] = $country_string;
 			
+			// determine algae eating ability
+			$algae_eating_rank = $main_profile['main_profile'][0]->algae_eating_rank;
+			if ($algae_eating_rank >= 1 && $algae_eating_rank < 5) $algae_eater = "yes (ok)";
+			else if ($algae_eating_rank >=4 && $algae_eating_rank < 8) $algae_eater = "yes (good)";
+			else if ($algae_eating_rank > 7) $algae_eater = "yes (excellent)";
+			else $algae_eater = "no";
+			$main_profile['algae_eater'] = $algae_eater;
+
+			// set schooler value
+			$schooler = "no";
+			if ($main_profile['main_profile'][0]->schooler) $schooler = "yes";
+			$main_profile['schooler'] = $schooler;
+
+			// set the swim region string
+			$swim_region_string = "";
+			if ($main_profile['main_profile'][0]->swim_region_bottom) $swim_region_string="bottom";
+			if ($main_profile['main_profile'][0]->swim_region_middle)
+			{
+				if (empty($swim_region_string)) $swim_region_string .= ", middle";
+				else $swim_region_string = "middle";
+			}
+			if ($main_profile['main_profile'][0]->swim_region_top)
+			{
+				if (empty($swim_region_string)) $swim_region_string .= ", top";
+				else $swim_region_string = "top";
+			}
+			$main_profile['swim_region_string'] = $swim_region_string;
+
+
+			// set all null or 0 values to "--" - right now this loops through the entire object. I think there is prob a smarter way to do this
+			foreach ($main_profile as $data_array_key => $data)
+			{
+				if (is_array($data))
+				{
+					foreach ($data as $key => $value)
+					{
+						foreach ($value as $key2 => $value2)
+						{
+							if (!$value2)
+							{
+								$value->$key2 = "--";
+							}
+						}
+					}
+					$main_profile[$data_array_key] = $data;
+				}
+				else
+				{
+					if (!$data)
+					{
+						$main_profile[$data_array_key] = "--";
+					}
+				}
+			}
+
 			return $main_profile;
 		}   
 		else 
