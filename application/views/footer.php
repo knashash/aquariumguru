@@ -1,7 +1,7 @@
 
 
 <div class="sixteen columns" id="footer">
-	<a href="link1">link 1</a> | <a href="link2">link 2</a> | <a href="link2">link 3</a>
+	<a href="/fish-profiles">Fish Profiles</a> | <a href="/articles">Articles</a> | <a href="/contact_us">Contact Us</a>
 </div>
 
 </div>
@@ -12,9 +12,13 @@
 <?php
      if (!empty($js_file)) echo $js_file;
 ?>
+	<script type="text/javascript">
 
+</script>
+   
    <script type="text/javascript">
-        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+
+		/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
         var disqus_shortname = 'aquariumguru'; // required: replace example with your forum shortname
 
         /* * * DON'T EDIT BELOW THIS LINE * * */

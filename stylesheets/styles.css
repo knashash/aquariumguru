@@ -1,5 +1,6 @@
 #footer {
 	text-align:center;
+	margin-top: 50px
 }
 
 #header {
@@ -57,7 +58,7 @@
 	padding-right: 0;
 }
 
-#alert_box {
+#alert_box,#profile_notifications_box {
 	  padding: 8px 35px 8px 14px;
 	  margin-bottom: 18px;
 	  margin-top: 18px;
@@ -73,10 +74,22 @@
 	  display:none;
 }
 
+#profile_notifications_box {
+	width:400px;
+}
+
+#profile_notifications_box ul {
+	color:red;
+}
+
 .alert_error {
   background-color: #f2dede;
   border-color: #eed3d7;
   color: #b94a48;
+}
+
+label.inline {
+	display: inline-block
 }
 
 
@@ -100,6 +113,26 @@ form.custom textarea {
 	width: 100%;
 }
 
+ul.names_list li {
+	display:inline;
+	list-style-type: none;
+	padding-right: 20px
+}
+
+#profile_incomplete_notice {
+	text-align:center;
+	margin-bottom:10px;
+	background-color:#FF3333;
+}
+#profile_incomplete_notice span {
+	color:black;
+	font-weight:bold
+}
+
+#profile_updates {
+	vertical-align: top;
+}
+
  /*================= PROFILE PAGE ===================*/
 .comments_header {
 	font-weight:bold;
@@ -115,7 +148,22 @@ form.custom textarea {
 
 #profile_container h1 {
 	margin-top: 20px;
-	font-size: 30px
+	font-size: 30px;
+}
+
+#profile_container div.name_alts {
+	margin-top: 10px;
+}
+
+#profile_container div.name_alts p {
+	font-weight:bold;
+	font-size:14px;
+}
+
+#profile_container h2 {
+	font-size: 14px;
+	line-height: 5px;
+	display:inline
 }
 
 #profile_container p {

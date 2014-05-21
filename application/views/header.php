@@ -8,6 +8,14 @@
 	<!-- Basic Page Needs
   ================================================== -->
 	<meta charset="utf-8">
+	
+	<?php
+		if (!isset($page_title))
+		{
+			$page_title = "AquariumGuru";
+		}
+	?>
+	
 	<title><?php echo $page_title?></title>
 	<meta name="description" content="">
 	<meta name="author" content="">
@@ -23,6 +31,7 @@
 	<link rel="stylesheet" href="<?php echo base_url();?>stylesheets/skeleton.css">
 	<link rel="stylesheet" href="<?php echo base_url();?>stylesheets/layout.css">
 	<link rel="stylesheet" href="<?php echo base_url();?>stylesheets/styles.css">
+	<link rel="stylesheet" href="<?php echo base_url();?>js/swipebox-master/src/css/swipebox.min.css">
 
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -40,15 +49,39 @@
 <body>
 	<div class="container">
 
+	<?php
+		// determine what the current navigation tab should be. Default is the homepage
+		$page_fish_profiles = "";
+		$page_home = "";
+		
+		if (isset($current_nav_page))
+		{
+			if ($current_nav_page == "home")
+			{
+				$page_home = "current_page_item";
+			}
+			else
+			{
+				if ($current_nav_page == "fish-profiles")
+				{
+					$page_fish_profiles = "current_page_item";
+				}
+			}
+		}
+		else
+		{
+			$page_home = "current_page_item";
+		}
+	?>
 	
 	<div id="header" class="sixteen columns">
 		<div class="one-third column" id="logo">
-			<h1><a href="#">Oceania</a></h1>
+			<h1><a href="http://aquariumguru.com">AquariumGuru</a></h1>
 		</div>
 		<div class="two-third column" id="menu">
 			<ul>
-				<li class="first current_page_item"><a href="#">Homepage</a></li>
-				<li><a href="#">Photos</a></li>
+				<li class="first <?php echo $page_home?>"><a href="/">Homepage</a></li>
+				<li class="<?php echo $page_fish_profiles?>"><a href="/fish-profiles">Fish Profiles</a></li>
 				<li><a href="#">About</a></li>
 				<li><a href="#">Blog</a></li>
 				<li class="last"><a href="#">Contact</a></li>

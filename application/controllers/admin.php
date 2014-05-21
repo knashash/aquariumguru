@@ -55,7 +55,8 @@ class Admin extends MY_Controller {
      **/
     public function get_common_names() {
 	  $profile_id = $this->input->post('profile_id');
-      $common_names = $this->fish_profiles_model->get_common_names($profile_id);
+	  $edit_list = $this->input->post('edit_list');
+      $common_names = $this->fish_profiles_model->get_common_names($profile_id, $edit_list);
 	  echo json_encode($common_names);
     }
 
@@ -127,7 +128,8 @@ class Admin extends MY_Controller {
      **/
     public function get_scientific_names() {
 	  $profile_id = $this->input->post('profile_id');
-      $scientific_names = $this->fish_profiles_model->get_scientific_names($profile_id);
+	  $edit_list = $this->input->post('edit_list');
+      $scientific_names = $this->fish_profiles_model->get_scientific_names($profile_id, $edit_list);
 	  echo json_encode($scientific_names);
     }
 
@@ -147,18 +149,47 @@ class Admin extends MY_Controller {
      **/
     public function validate_login() 
 	{
-	  
-	  $password = $this->input->post('password');
-	  $username = $this->input->post('username');
-	  
-      if ($password == "24knashash" && $username=="knashash") 
-	  {
-		$this->session->set_userdata('username', 'knashash');
-		$status['message'] = "Login successful";
-		echo json_encode($status);
-	  }
-	  else $this->_json_error('Invalid email or password');
+		$password = $this->input->post('password');
+		$username = $this->input->post('username');
+		$login_valid = false;
+
+		$valid_logins = array();
+		$valid_logins[0]['username'] = "knashash";
+		$valid_logins[0]['password'] = "24knashash";
+		$valid_logins[1]['username'] = "test_user";
+		$valid_logins[1]['password'] = "ag_april16";
+		$valid_logins[2]['username'] = "bcakes";
+		$valid_logins[2]['password'] = "backstroke";
+		$valid_logins[3]['username'] = "nschuster";
+		$valid_logins[3]['password'] = "270peachtree";
+
+		foreach ($valid_logins as $valid_login_data)
+		{
+			if ($password == $valid_login_data['password'] && $username == $valid_login_data['username']) 
+			{
+				$this->session->set_userdata('username', $username);
+				$login_valid = true;
+				$status['message'] = "Login successful";
+				echo json_encode($status);
+			}
+		}
+		if (!$login_valid) $this->_json_error('Invalid email or password');
     }
+
+	/**
+     * Gets the most recent profile updates from the current admin user
+     *
+     * @return void
+     **/
+	public function get_user_profile_updates()
+	{
+		$image_id = $this->input->get('image_id');
+
+		// get recent updates
+		$recent_updates = $this->fish_profiles_model->get_user_profile_updates();
+
+		echo json_encode($recent_updates);
+	}
 
 	/**
      * Edit the comments in a profile image
@@ -316,8 +347,8 @@ class Admin extends MY_Controller {
 		$config['upload_path'] = './uploads/';
 		$config['allowed_types'] = 'gif|jpg|png';
 		$config['max_size']	= '500';
-		$config['max_width']  = '2000';
-		$config['max_height']  = '2000';
+		$config['max_width']  = '5000';
+		$config['max_height']  = '5000';
 
 		$this->load->library('upload', $config);
 

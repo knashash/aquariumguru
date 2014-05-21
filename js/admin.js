@@ -9,6 +9,7 @@ $(document).ready(function(){
 		populate_eco_systems();
 		populate_regions();
 		populate_countries();
+		display_recent_updates(); //get the users most recent profile updates
 		
 		//populate appropriate scientific names when common name selected
 		$('#common_name').change(function()
@@ -24,288 +25,13 @@ $(document).ready(function(){
 				profile_id = $('#scientific_name').val();
 		});
 
-		$('#form_fish_search').submit(function()
+		//populate appropriate common names when scientific name selected
+		$('#submit_search').click(function()
 		{
-				var common_names_str = '';
-
-				// clear any input values using the append feature
-				$('#profile_images').empty();
-				$('#regions_list').empty();
-				$('#countries_list').empty();
-				
-				$.ajax({
-				type: "POST",
-				url: "/fish_profiles/get_profile/",
-				data: {profile_id:profile_id},
-				async: true,
-				dataType: "json",
-				success: function( data ) {
-					//$.each(data, function (index, value) {
-							
-							$('#profile_id').val(data.main_profile[0].id);
-							
-							$('#scientific_name_e').val(data.main_profile[0].scientific_name);
-
-							$.each(data.common_names, function(index,value) {
-								if (common_names_str.length>1)
-								{
-									common_names_str += ', '+value.name;
-								}
-								else
-								{
-									common_names_str = value.name;
-								}
-							});
-							$('#common_names').val(common_names_str);
-
-							$.each(data.regions, function(index,value) {
-								$('#regions_list').append('<li>'+value.region+'</li>');
-							});
-
-							$.each(data.countries, function(index,value) {
-								$('#countries_list').append('<li>'+value.country+'</li>');
-							});
-
-							$('#category').val(data.main_profile[0].category_id);
-							$('#family').val(data.main_profile[0].family_id);
-							$('#eco_system').val(data.main_profile[0].eco_system_id);
-							
-							//$('#country').val(this.country);
-							$('#tempermant').val(data.main_profile[0].tempermant);
-							$('#diet').val(data.main_profile[0].diet);
-							$('#colors').val(data.main_profile[0].colors);
-							$('#markings').val(data.main_profile[0].markings);
-							$('#activity').val(data.main_profile[0].activity);
-							$('#algae_eating_rank').val(data.main_profile[0].algae_eating_rank);
-							$('#schooler').val(data.main_profile[0].schooler);
-							$('#lifespan').val(data.main_profile[0].lifespan);
-							$('#max_size').val(data.main_profile[0].max_size);
-							$('#min_tank_size').val(data.main_profile[0].min_tank_size);
-							$('#max_size_female').val(data.main_profile[0].max_size_female);
-							$('#max_size_male').val(data.main_profile[0].max_size_male);
-							$('#temp_high').val(data.main_profile[0].temp_high);
-							$('#temp_low').val(data.main_profile[0].temp_low);
-							$('#dh_high').val(data.main_profile[0].dh_high);
-							$('#dh_low').val(data.main_profile[0].dh_low);
-							$('#ph_high').val(data.main_profile[0].ph_high);
-							$('#ph_low').val(data.main_profile[0].ph_low);
-							$('#care_difficulty_rank').val(data.main_profile[0].care_difficulty_rank);
-							$('#breeding_difficulty_rank').val(data.main_profile[0].breeding_difficulty_rank);
-
-							if (data.main_profile[0].swim_region_bottom == 1) $('#swim_region_b').prop('checked', true);
-							if (data.main_profile[0].swim_region_top == 1) 
-							{
-								$('#swim_region_t').prop('checked', true);
-							}
-							if (data.main_profile[0].swim_region_middle == 1) $('#swim_region_m').prop('checked', true);
-
-							
-							// populate comments section
-							$('#general_description').val(data.main_profile[0].general_description);
-							$('#care_comments').val(data.main_profile[0].care_comments);
-							$('#breeding_comments').val(data.main_profile[0].breeding_comments);
-							$('#behavior_comments').val(data.main_profile[0].behavior_comments);
-							$('#sexing').val(data.main_profile[0].sexing);
-							
-							
-							var image_count = 0;
-							var image_comment = '';
-							$.each(data.profile_images, function(index,value) {
-								
-								image_comment = value.comments;
-								image_id = value.id;
-								
-								// truncate the image comments for display in the main admin area
-								var allowed_length = 18;
-								var truncated_comment = image_comment;
-								if (image_comment.length > allowed_length)
-								{
-									truncated_comment = image_comment.substring(0,allowed_length)+'...';
-								}
-
-								image_count++;
-
-								$('#profile_images').append('<li><a href=\'/admin/edit_image?image_id='+image_id+'\' target=\'_blank\'>image'+image_count+'</a> '+truncated_comment+'</li>');
-							});
-					//});
-				}	
-			});
-
-			
-			var other_comments = '';
-			var breeding_comments = '';
-			var general_comments = '';
-			var behavior_comments = '';
-			var care_comments = '';
-			var sexing_comments = ''
-			$.ajax({
-				type: "POST",
-				url: "/admin/get_comments/",
-				data: {profile_id:profile_id},
-				async: true,
-				dataType: "json",
-				success: function( data ) {
-						var commentsObj = data[0];
-						
-						
-						//============= BREEDING =============================
-						if (commentsObj.BreedingComments)
-						{
-							breeding_comments += commentsObj.BreedingComments+"<br>";
-						}
-						if (commentsObj.breeding_comments)
-						{
-							breeding_comments += commentsObj.breeding_comments+"<br>";
-						}
-
-
-						//============= SEXING =============================
-						if (commentsObj.Sexing)
-						{
-							sexing_comments += commentsObj.Sexing+"<br>";
-						}
-						if (commentsObj.sexing)
-						{
-							sexing_comments += commentsObj.sexing+"<br>";
-						}
-
-
-						//============= CARE AND DIET =============================
-						if (commentsObj.care_comments)
-						{
-							care_comments += commentsObj.care_comments+"<br>";
-						}
-
-						if (commentsObj.Tank)
-						{
-							care_comments += commentsObj.Tank+"<br>";
-						}
-
-						if (commentsObj.Food)
-						{
-							care_comments += commentsObj.Food+"<br>";
-						}
-
-						if (commentsObj.diet_comments)
-						{
-							care_comments += commentsObj.diet_comments+"<br>";
-						}
-
-						
-						//============= GENERAL/PHYSICAL DESCRIPTION =============================
-						if (commentsObj.Description)
-						{
-							general_comments += commentsObj.Description+"<br>";
-						}
-						
-						if (commentsObj.OtherComments)
-						{
-							general_comments += commentsObj.OtherComments+"<br>";
-						}
-
-						if (commentsObj.OtherComments2)
-						{
-							general_comments += commentsObj.OtherComments2+"<br>";
-						}
-
-						if (commentsObj.comments)
-						{
-							general_comments += commentsObj.comments+"<br>";
-						}
-
-						if (commentsObj.Habitat)
-						{
-							general_comments += commentsObj.Habitat+"<br>";
-						}
-						
-						if (commentsObj.eco_system_comments)
-						{
-							general_comments += commentsObj.eco_system_comments+"<br>";
-						}
-
-						if (commentsObj.origin_comments)
-						{
-							general_comments += commentsObj.origin_comments+"<br>";
-						}
-						
-						if (commentsObj.Size)
-						{
-							general_comments += "Size: "+commentsObj.Size+"<br>";
-						}
-						
-						if (commentsObj.colors)
-						{
-							general_comments += "Colors: "+commentsObj.colors+"<br>";
-						}
-						
-						if (commentsObj.markings)
-						{
-							general_comments += "Markings: "+commentsObj.markings+"<br>";
-						}
-
-						if (commentsObj.mouth)
-						{
-							general_comments += "Mouth: "+commentsObj.mouth+"<br>";
-						}
-
-						if (commentsObj.tail)
-						{
-							general_comments += "Tail: "+commentsObj.tail+"<br>";
-						}
-
-						
-						//============= BEHAVIOR =============================
-						if (commentsObj.SocialBehavior)
-						{
-							behavior_comments += commentsObj.SocialBehavior+"<br>";
-						}
-
-						if (commentsObj.activity)
-						{
-							behavior_comments += commentsObj.activity+"<br>";
-						}
-						
-						if (commentsObj.tempermant_comments)
-						{
-							behavior_comments += commentsObj.tempermant_comments+"<br>";
-						}
-
-						if (commentsObj.SwimRegion)
-						{
-							behavior_comments += "Swim Region: "+commentsObj.SwimRegion+"<br>";
-						}
-						
-						
-						if (general_comments)
-						{
-							other_comments += "<h3>Description:</h3> "+general_comments+"<br><br>";
-						}
-						if (sexing_comments)
-						{
-							other_comments += "<h3>Sexing:</h3> "+sexing_comments+"<br><br>";
-						}
-						if (behavior_comments)
-						{
-							other_comments += "<h3>Social Behavior:</h3> "+behavior_comments+"<br><br>";
-						}
-						if (care_comments)
-						{
-							other_comments += "<h3>Care:</h3> "+care_comments+"<br><br>";
-						}
-						if (breeding_comments)
-						{
-							other_comments += "<h3>Breeding:</h3> "+breeding_comments+"<br><br>";
-						}
-
-						$('#comments_section').html(other_comments);
-				}	
-			});
-
-			return false;
+				load_profile();
 		});
 
-
-
+		
 		$( "#fish_profile_form" ).submit(function( event ) {
 		  
 			var profile_data = $("#fish_profile_form").serializeArray();
@@ -359,6 +85,336 @@ $(document).ready(function(){
 
 
 /**
+  * @desc loads a fish profile and all realted data
+  * @return void
+*/ 
+function load_profile()
+{
+	var common_names_str = '';
+	
+	// clear any input values using the append feature
+	$('#profile_images').empty();
+	$('#regions_list').empty();
+	$('#countries_list').empty();
+	$('#profile_notifications_list').empty();
+	$('#profile_notifications_box').hide();
+
+	$('#general_description').val('');
+	$('#care_comments').val('');
+	$('#breeding_comments').val('');
+	$('#behavior_comments').val('');
+	$('#sexing').val('');
+
+	$('#swim_region_b').prop('checked', false);
+	$('#swim_region_m').prop('checked', false);
+	$('#swim_region_t').prop('checked', false);
+	$('#profile_complete').prop('checked', false);
+	
+	$.ajax({
+	type: "POST",
+	url: "/fish_profiles/get_profile/",
+	data: {profile_id:profile_id},
+	async: true,
+	dataType: "json",
+	success: function( data ) {
+		$('#profile_id').val(data.main_profile[0].profile_id);
+		
+		$('#scientific_name_e').val(data.main_profile[0].scientific_name);
+
+		$.each(data.common_names, function(index,value) {
+			if (common_names_str.length>1)
+			{
+				common_names_str += ', '+value.name;
+			}
+			else
+			{
+				common_names_str = value.name;
+			}
+		});
+		$('#common_names').val(common_names_str);
+
+		$.each(data.regions, function(index,value) {
+			$('#regions_list').append('<li>'+value.region+'</li>');
+		});
+
+		$.each(data.countries, function(index,value) {
+			$('#countries_list').append('<li>'+value.country+'</li>');
+		});
+
+		$('#category').val(data.main_profile[0].category_id);
+		$('#family').val(data.main_profile[0].family_id);
+		$('#eco_system').val(data.main_profile[0].eco_system_id);
+		
+		//$('#country').val(this.country);
+		$('#tempermant').val(data.main_profile[0].tempermant);
+		$('#diet').val(data.main_profile[0].diet);
+		$('#colors').val(data.main_profile[0].colors);
+		$('#markings').val(data.main_profile[0].markings);
+		$('#activity').val(data.main_profile[0].activity);
+		$('#algae_eating_rank').val(data.main_profile[0].algae_eating_rank);
+		$('#schooler').val(data.main_profile[0].schooler);
+		$('#lifespan').val(data.main_profile[0].lifespan);
+		$('#max_size').val(data.main_profile[0].max_size);
+		$('#min_tank_size').val(data.main_profile[0].min_tank_size);
+		$('#max_size_female').val(data.main_profile[0].max_size_female);
+		$('#max_size_male').val(data.main_profile[0].max_size_male);
+		$('#temp_high').val(data.main_profile[0].temp_high);
+		$('#temp_low').val(data.main_profile[0].temp_low);
+		$('#dh_high').val(data.main_profile[0].dh_high);
+		$('#dh_low').val(data.main_profile[0].dh_low);
+		$('#ph_high').val(data.main_profile[0].ph_high);
+		$('#ph_low').val(data.main_profile[0].ph_low);
+		$('#care_difficulty_rank').val(data.main_profile[0].care_difficulty_rank);
+		$('#breeding_difficulty_rank').val(data.main_profile[0].breeding_difficulty_rank);
+
+		if (data.main_profile[0].swim_region_bottom == 1) $('#swim_region_b').prop('checked', true);
+		if (data.main_profile[0].swim_region_top == 1) $('#swim_region_t').prop('checked', true);
+		if (data.main_profile[0].swim_region_middle == 1) $('#swim_region_m').prop('checked', true);
+		
+		var last_update_username;
+		var last_update_time;
+		var username_completed;
+		if (data.profile_updates)
+		{
+			$.each(data.profile_updates, function(index,value) {
+				
+			last_update_username = value.username;
+			last_update_time = value.update_time;
+			
+			if (value.notes == 'completed')
+			{
+				username_completed = value.username;
+			}
+			});
+		}
+		
+
+		// if current user is different from last user update, display that notification
+		var current_user = $('#username').val();
+		var notification = false;
+		if (last_update_username && current_user != last_update_username) 
+		{
+			notification = true;
+			$('#profile_notifications_box').show();
+			$('#profile_notifications_list').append('<li>--- DO NOT EDIT THIS PROFILE --</li>');
+			$('#profile_notifications_list').append('<li>This profile is being worked on by '+last_update_username+'. Last Updated ('+last_update_time+')</li>');
+		}
+		
+		// if profile has been marked complete, display that info
+		if (data.main_profile[0].completed == 1) 
+		{
+			$('#profile_complete').prop('checked', true);
+			$('#profile_notifications_box').show();
+			if (!notification)
+			{
+				$('#profile_notifications_list').append('<li>--- DO NOT EDIT THIS PROFILE --</li>');
+			}
+			$('#profile_notifications_list').append('<li>This profile has been marked completed by '+username_completed+'</li>');
+		}
+		
+		// populate comments section
+		$('#general_description').val(data.main_profile[0].general_description);
+		$('#care_comments').val(data.main_profile[0].care_comments);
+		$('#breeding_comments').val(data.main_profile[0].breeding_comments);
+		$('#behavior_comments').val(data.main_profile[0].behavior_comments);
+		$('#sexing').val(data.main_profile[0].sexing);
+		
+		
+		var image_count = 0;
+		var image_comment = '';
+		$.each(data.profile_images, function(index,value) {
+			
+			image_comment = value.comments;
+			image_id = value.id;
+			
+			// truncate the image comments for display in the main admin area
+			var allowed_length = 18;
+			var truncated_comment = image_comment;
+			if (image_comment.length > allowed_length)
+			{
+				truncated_comment = image_comment.substring(0,allowed_length)+'...';
+			}
+
+			image_count++;
+
+			$('#profile_images').append('<li><a href=\'/admin/edit_image?image_id='+image_id+'\' target=\'_blank\'>image'+image_count+'</a> '+truncated_comment+'</li>');
+			});
+		}
+	});
+
+	
+	var other_comments = '';
+	var breeding_comments = '';
+	var general_comments = '';
+	var behavior_comments = '';
+	var care_comments = '';
+	var sexing_comments = ''
+	$.ajax({
+		type: "POST",
+		url: "/admin/get_comments/",
+		data: {profile_id:profile_id},
+		async: true,
+		dataType: "json",
+		success: function( data ) {
+			var commentsObj = data[0];
+			
+			//============= BREEDING =============================
+			if (commentsObj.BreedingComments)
+			{
+				breeding_comments += commentsObj.BreedingComments+"<br>";
+			}
+			if (commentsObj.breeding_comments)
+			{
+				breeding_comments += commentsObj.breeding_comments+"<br>";
+			}
+
+
+			//============= SEXING =============================
+			if (commentsObj.Sexing)
+			{
+				sexing_comments += commentsObj.Sexing+"<br>";
+			}
+			if (commentsObj.sexing)
+			{
+				sexing_comments += commentsObj.sexing+"<br>";
+			}
+
+
+			//============= CARE AND DIET =============================
+			if (commentsObj.care_comments)
+			{
+				care_comments += commentsObj.care_comments+"<br>";
+			}
+
+			if (commentsObj.Tank)
+			{
+				care_comments += commentsObj.Tank+"<br>";
+			}
+
+			if (commentsObj.Food)
+			{
+				care_comments += commentsObj.Food+"<br>";
+			}
+
+			if (commentsObj.diet_comments)
+			{
+				care_comments += commentsObj.diet_comments+"<br>";
+			}
+
+			
+			//============= GENERAL/PHYSICAL DESCRIPTION =============================
+			if (commentsObj.Description)
+			{
+				general_comments += commentsObj.Description+"<br>";
+			}
+			
+			if (commentsObj.OtherComments)
+			{
+				general_comments += commentsObj.OtherComments+"<br>";
+			}
+
+			if (commentsObj.OtherComments2)
+			{
+				general_comments += commentsObj.OtherComments2+"<br>";
+			}
+
+			if (commentsObj.comments)
+			{
+				general_comments += commentsObj.comments+"<br>";
+			}
+
+			if (commentsObj.Habitat)
+			{
+				general_comments += commentsObj.Habitat+"<br>";
+			}
+			
+			if (commentsObj.eco_system_comments)
+			{
+				general_comments += commentsObj.eco_system_comments+"<br>";
+			}
+
+			if (commentsObj.origin_comments)
+			{
+				general_comments += commentsObj.origin_comments+"<br>";
+			}
+			
+			if (commentsObj.Size)
+			{
+				general_comments += "Size: "+commentsObj.Size+"<br>";
+			}
+			
+			if (commentsObj.colors)
+			{
+				general_comments += "Colors: "+commentsObj.colors+"<br>";
+			}
+			
+			if (commentsObj.markings)
+			{
+				general_comments += "Markings: "+commentsObj.markings+"<br>";
+			}
+
+			if (commentsObj.mouth)
+			{
+				general_comments += "Mouth: "+commentsObj.mouth+"<br>";
+			}
+
+			if (commentsObj.tail)
+			{
+				general_comments += "Tail: "+commentsObj.tail+"<br>";
+			}
+
+			
+			//============= BEHAVIOR =============================
+			if (commentsObj.SocialBehavior)
+			{
+				behavior_comments += commentsObj.SocialBehavior+"<br>";
+			}
+
+			if (commentsObj.activity)
+			{
+				behavior_comments += commentsObj.activity+"<br>";
+			}
+			
+			if (commentsObj.tempermant_comments)
+			{
+				behavior_comments += commentsObj.tempermant_comments+"<br>";
+			}
+
+			if (commentsObj.SwimRegion)
+			{
+				behavior_comments += "Swim Region: "+commentsObj.SwimRegion+"<br>";
+			}
+			
+			
+			if (general_comments)
+			{
+				other_comments += "<h3>Description:</h3> "+general_comments+"<br><br>";
+			}
+			if (care_comments)
+			{
+				other_comments += "<h3>Care:</h3> "+care_comments+"<br><br>";
+			}
+			if (behavior_comments)
+			{
+				other_comments += "<h3>Social Behavior:</h3> "+behavior_comments+"<br><br>";
+			}
+			if (breeding_comments)
+			{
+				other_comments += "<h3>Breeding:</h3> "+breeding_comments+"<br><br>";
+			}
+			if (sexing_comments)
+			{
+				other_comments += "<h3>Sexing:</h3> "+sexing_comments+"<br><br>";
+			}
+			
+			$('#comments_section').html(other_comments);
+		}	
+	});
+
+	return false;
+};
+
+/**
   * @desc retrieve a list of common names and populate the dropdown
   * @param int profile_id - the profile id of the fish
   * @return void
@@ -373,7 +429,7 @@ function get_common_names(profile_id)
 		$.ajax({
 				type: "POST",
 				url: "/admin/get_common_names/",
-				data: {profile_id:profile_id},
+				data: {profile_id:profile_id,edit_list:1},
 				async: true,
 				dataType: "json",
 				success: function( data ) {
@@ -385,6 +441,42 @@ function get_common_names(profile_id)
 		});
 }
 
+/**
+  * @desc retrieves and displays a list of profiles the current admin user has recently updated
+  * @return void
+*/ 
+function display_recent_updates()
+{		
+		var show_limit = 3;
+		var update_count = 0;
+
+		$.ajax({
+				type: "POST",
+				url: "/admin/get_user_profile_updates/",
+				async: true,
+				dataType: "json",
+				success: function( data ) {
+					$.each(data, function(index,value) {
+						if (update_count < show_limit)
+						{
+							$('#recent_updates').append('<li><a href=\'#\' onclick=\'load_recent_update('+value.profile_id+'); return false;\'>'+value.scientific_name+'</a></li>');
+						}
+						update_count++;
+					});
+				}	
+		});
+}
+
+/**
+  * @desc called on the click action of recent updates, this sets the profile id and calls the load profile function
+  * @param int updated_profile_id - the profile id of the fish
+  * @return void
+*/ 
+function load_recent_update(updated_profile_id)
+{
+	profile_id = updated_profile_id;
+	load_profile();
+}
 
 /**
   * @desc retrieve a list of scientific names and populate the dropdown
@@ -401,7 +493,7 @@ function get_scientific_names(profile_id)
 	$.ajax({
 				type: "POST",
 				url: "/admin/get_scientific_names/",
-				data: {profile_id:profile_id},
+				data: {profile_id:profile_id,edit_list:1},
 				async: true,
 				dataType: "json",
 				success: function( data ) {

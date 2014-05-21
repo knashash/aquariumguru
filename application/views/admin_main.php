@@ -1,34 +1,55 @@
 <div class="sixteen columns">
 	<h1 class="remove-bottom" style="margin-top: 40px">MAIN ADMIN SECTION</h1>
 	<hr />
-
-	<form id="form_fish_search">
-		Needs Text: <input type="checkbox" name="needs_text" id="needs_text">
-		Needs Images: <input type="checkbox" name="needs_images" id="needs_images"><br>
-
-			Common Name:
-			<select name="common_name" id="common_name" class="side_by_side">
-			</select>
-
-			Scientific Name:
-			<select name="scientific_name" id="scientific_name" class="side_by_side">
-			</select>
-
-		<input type="submit" value="Submit">
-	</form>
 </div>
 
+<div class="sixteen columns">
+	<form id="form_fish_search">
+	
+	<div class="five columns">
+			<label for="common_name">Common Name:<label>
+			<select name="common_name" id="common_name" class="side_by_side">
+			</select>
+		<br>
+		<input type="button" value="Submit" id="submit_search">
+	</div>
+
+	<div class="five columns">
+			<label for="scientific_name">Scientific Name:<label>
+			<select name="scientific_name" id="scientific_name" class="side_by_side">
+			</select>
+	</div>
+	
+	
+	<div class="five columns" id="profile_updates">
+			<div>
+				Recent Profile Updates
+				
+				<ul id="recent_updates">
+				</ul>
+			</div>
+	</div>
+	
+	</form>
+	<hr />
+</div>
 
 <div class="nine columns">
+	<div id="profile_notifications_box">
+		<ul id="profile_notifications_list">
+		</ul>
+	</div>
 	<form class="custom" id="fish_profile_form">
 		<input type="hidden" name="id" id="profile_id">
+		<input type="hidden" name="username" id="username" value="<?php echo $this->session->userdata('username');?>">
+		
 		<div class="side_by_side">
 			<label for="scientific_name_e">Scientific Name:</label>
-			<input type="text" id="scientific_name_e" disabled>
+			<input type="text" id="scientific_name_e" >
 		</div>
 		<div class="side_by_side">
 			<label for="common_names">Common Name(s):</label>
-			<textarea id="common_names" disabled></textarea>
+			<textarea id="common_names"></textarea>
 		</div>
 		<div class="side_by_side">
 			<label for="profile_images">Profile Images: <a href="/admin/upload" target="_blank" id="upload_images">(upload)</a></label>
@@ -177,7 +198,7 @@
 		</div>
 		<br>
 		<div class="side_by_side">
-			<label for="lifespan">Lifespan:</label>
+			<label for="lifespan">Lifespan (yrs):</label>
 			<select name="lifespan" id="lifespan">
 				<?php
 					for ($i=0;$i<50;$i++)
@@ -188,7 +209,7 @@
 			</select>
 		</div>
 		<div class="side_by_side">
-			<label for="min_tank_size">Min Tank Size:</label>
+			<label for="min_tank_size">Min Tank Size (gallons):</label>
 			<select name="min_tank_size" id="min_tank_size">
 			<?php
 					for ($i=0;$i<100;$i++)
@@ -242,7 +263,7 @@
 		</div>
 		<br>
 		<div class="side_by_side">
-			<label for="">Temp Tolerance:</label>
+			<label for="">Temp Tolerance (f):</label>
 			Low: <select name="temp_low" id="temp_low" class="side_by_side">
 			<?php
 					for ($i=0;$i<100;$i++)
@@ -260,7 +281,7 @@
 			</select>
 		</div>
 		<div class="side_by_side">
-			<label for="">Size:</label>
+			<label for="">Size (cm):</label>
 			Max: <select name="max_size" id="max_size" class="side_by_side">
 			<?php
 					for ($i=0;$i<120;$i++)
@@ -283,6 +304,11 @@
 					}
 			?>
 			</select>
+		</div>
+		<br>
+		<div class="side_by_side">
+			<label for="" class="inline">Profile Complete:</label>
+			<input type="checkbox" id="profile_complete" name="completed">
 		</div>
 </div>
 
