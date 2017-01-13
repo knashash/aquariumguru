@@ -89,7 +89,7 @@ class Fish_Profiles extends MY_Controller {
 		$data['main_profile'][0]->searched_name = urldecode($name);
 		$data['main_profile'][0]->searched_name_type = "scientific";
 		$this->scrub_profile_data($data);
-		$this->load->view('header', array('page_title'=>'Fish Profiles - Scientific Name Profile', 'current_nav_page' => 'fish-profiles'));
+		$this->load->view('header', array('page_title'=>'Fish Profiles - Scientific Name Profile - '.$name, 'current_nav_page' => 'fish-profiles'));
 		$this->load->view('view_profile', $data);
 		$this->load->view('footer', array('js_file'=>'<script src=\'/js/swipebox-master/src/js/jquery.swipebox.js\'></script><script src=\'/js/view_profile.js\'></script>'));
 	}
@@ -108,7 +108,7 @@ class Fish_Profiles extends MY_Controller {
 		$this->scrub_profile_data($data);
 		$data['main_profile'][0]->searched_name = $name;
 		$data['main_profile'][0]->searched_name_type = "common";
-		$this->load->view('header', array('page_title'=>'Fish Profiles - Common Name Profile', 'current_nav_page' => 'fish-profiles'));
+		$this->load->view('header', array('page_title'=>'Fish Profiles - Common Name Profile - '.$name, 'current_nav_page' => 'fish-profiles'));
 		$this->load->view('view_profile', $data);
 		$this->load->view('footer', array('js_file'=>'<script src=\'/js/swipebox-master/src/js/jquery.swipebox.js\'></script><script src=\'/js/view_profile.js\'></script>'));
 	}

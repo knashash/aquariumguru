@@ -17,8 +17,8 @@
 	?>
 	
 	<title><?php echo $page_title?></title>
-	<meta name="description" content="">
-	<meta name="author" content="">
+	<meta name="description" content="AquariumGuru.com is a comprehensive resource for all things aquarium related.">
+	<meta name="keywords" content="aquarium,aquariums,fish,freshwater fish,saltwater fish">
 
 	<!-- Mobile Specific Metas
   ================================================== -->

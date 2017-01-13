@@ -137,7 +137,7 @@
 				<option value=""/>
 				<option value="peaceful"/>Peaceful
 				<option value="semi-aggressive"/>Semi-Aggressive
-				<option value="Aggressive"/>Aggressive
+				<option value="aggressive"/>Aggressive
 				<option value="highly aggressive"/>Highly Aggressive
 			</select>
 		</div>
